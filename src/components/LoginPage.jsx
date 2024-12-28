@@ -64,7 +64,7 @@ function LoginPage() {
                     {error && <p className="text-danger">{error}</p>} {/* Render error message if exists */}
                     <button className="mb-4 d-block btn-primary" style={{ height:'50px',width: '100%' }} onClick={handleLogin}>Sign in</button>
                     <div className="text-center">
-                        <p>you can use public account: studyali / 123 or register your own account</p>
+                        {/* <p>you can use public account: studyali / 123 or register your own account</p> */}
                         <p>Not a member? <a href="/signup" >Đăng ký / Register</a></p>
                     </div>
                 </MDBContainer>

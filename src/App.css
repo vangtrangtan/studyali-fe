@@ -345,7 +345,6 @@ select {
   display: block;
 }
 
-
 /* CSS for mobile */
 @media screen and (max-width: 960px) {
   header {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
 import useWindowDimensions from "../useWindowDimensions";
 import { CHINESE, ENGLISH, SERVER } from "../fileWithConstants";
@@ -7,7 +7,7 @@ import '../../App.css';
 import { detectMobile } from '../utils'; 
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 
-function HandleQuestion({ question, setAnswers, setCurrentQuestion }) {
+function HandleQuestion({ auth, uid, gameId, question, setAnswers, setCurrentQuestion }) {
 
     const [countDown, setCountDown] = useState(5);
     const [showCandidate, setShowCandidate] = useState(false);
@@ -27,6 +27,12 @@ function HandleQuestion({ question, setAnswers, setCurrentQuestion }) {
         setCurrentQuestion(prevState => prevState + 1);
         setCountDown(5);
         setShowCandidate(false);
+        let res = "no_answer";
+        if (canId != -1) {
+            if (canId === question.wordId) res = "correct";
+            else res = "wrong";
+        }
+        sendResult(auth, uid, gameId, question.questionId, res);
     }
 
     useEffect(() => {
@@ -54,6 +60,27 @@ function HandleQuestion({ question, setAnswers, setCurrentQuestion }) {
             <div> ⏰ {countDown}s</div>
             <div className='optionchoice'>{(showCandidate ? optionChoice : null)}</div>
         </div>);
+}
+
+function sendResult(auth, uid, game_id, question_id, result) {
+    const handleResquest = async () => {
+        try {
+            const response = await axios.post(SERVER + '/score/submit', {
+                uid,
+                game_id,
+                question_id,
+                result,
+            },
+                {
+                    headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': auth }
+                }
+            );
+        } catch (error) {
+            // Handle signup error
+            console.error('sendResult failed:', error.response ? error.response.data : error.message);
+        }
+    };
+    handleResquest();
 }
 
 function LoadResult({ answers, listQuestion }) {
@@ -94,6 +121,10 @@ export default function GameVocaCn() {
     const [loading, setLoading] = useState(false);
     const { heightWindow, widthWindow } = useWindowDimensions();
     const authHeader = useAuthHeader();
+    const uid = useRef(-1);
+    const gameId = useRef(-1);
+
+
     function SelectNumQuestion() {
         let listOption = []
         for (let i = 2; i <= 6; i++) {
@@ -154,9 +185,14 @@ export default function GameVocaCn() {
         })
             .then(function (response) {
                 console.log(response);
-                notResponse=false;
+                if (response === null) {
+                    alert("Error get question !!! please contact ADMIN");
+                }
+                notResponse = false;
                 setLoading(false);
-                setListQuestion(response.data);
+                setListQuestion(response.data.data);
+                uid.current = response.data.uid;
+                gameId.current = response.data.gameId;
             })
             .catch(function (error) {
                 console.log(error);
@@ -209,7 +245,8 @@ export default function GameVocaCn() {
         else {   //onplay state
             const ques = listQuestion[currentQuestion];
             console.log("onplay");
-            return (<div className='game' ><HandleQuestion question={ques} setAnswers={setAnswers} setCurrentQuestion={setCurrentQuestion} /></div>);
+            return (<div className='game' ><HandleQuestion auth={authHeader} uid={uid.current} 
+                gameId={gameId.current} question={ques} setAnswers={setAnswers} setCurrentQuestion={setCurrentQuestion} /></div>);
         }
     }
 

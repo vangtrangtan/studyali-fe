@@ -33,23 +33,6 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 
-// const getItemStyle = (isDragging, draggableStyle) => ({
-//   // some basic styles to make the items look a bit nicer
-//   userSelect: "none",
-//   padding: 8 * 2,
-//   margin: `0 ${8}px 0 0`,
-//   background: isDragging ? "lightgreen" : null,
-//   height: '70px',
-//   textAlign: 'center',
-//   fontSize: '25px',
-//   borderRadius: "15px",
-//   border: "2px solid 	#7B3F00",
-//   boxShadow: "rgba(0, 0, 0, 0.35) 0px 10px 10px",
-//   backgroundImage: isDragging ? "lightgreen" : `url(${GRID_IMG})`,
-//   // styles we need to apply on draggables
-//   ...draggableStyle
-// });
-
 const getItemStyle = (isDragging, draggableStyle,widthWindow,heightWindow) => (
   
   detectMobile()?{
@@ -104,7 +87,6 @@ const sendRequest = async (lang, numQuestion, level ,authHeader) => {
     , timeout: 5000
   })
     .then(function (response) {
-      console.log(response);
       return response.data;
     })
     .catch(function (error) {
@@ -114,14 +96,31 @@ const sendRequest = async (lang, numQuestion, level ,authHeader) => {
     });
   return res;
 }
+
+function sendResult(auth, uid, game_id, question_id, result) {
+  const handleResquest = async () => {
+      try {
+          const response = await axios.post(SERVER + '/score/submit', {
+              uid,
+              game_id,
+              question_id,
+              result,
+          },
+              {
+                  headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': auth }
+              }
+          );
+      } catch (error) {
+          // Handle signup error
+          console.error('sendResult failed:', error.response ? error.response.data : error.message);
+      }
+  };
+  handleResquest();
+}
+
 function GameWordOrderCn() {  ////lang = eng or cn
 
   const wordOrderData = useRef([{ "id": 54, "slashSentence": "会弹钢琴的人/羡慕/很/她/。", "items": ["会弹钢琴的人", "羡慕", "很", "她", "。"], "correctSentence": ["她很羡慕会弹钢琴的人。", "会弹钢琴的人很羡慕她。"], "meaning": "Cô ấy rất ngưỡng mộ những người biết chơi piano./Những người biết chơi piano rất ngưỡng mộ cô ấy.", "level": "HSK4" }, { "id": 59, "slashSentence": "请/从小到大的顺序/按/排列/这些数字", "items": ["请", "从小到大的顺序", "按", "排列", "这些数字"], "correctSentence": ["请按从小到大的顺序排列这些数字。", "这些数字请按从小到大的顺序排列。"], "meaning": "Hãy sắp xếp các số này theo thứ tự từ bé đến lớn.", "level": "HSK4" }, { "id": 63, "slashSentence": "对/很熟悉/我/这个城市", "items": ["对", "很熟悉", "我", "这个城市"], "correctSentence": ["我对这个城市很熟悉。", "对这个城市我很熟悉。"], "meaning": "Tôi rất thân thuộc với thành phố này.", "level": "HSK4" }, { "id": 72, "slashSentence": "好处/抽烟对你/没有/一点儿", "items": ["好处", "抽烟对你", "没有", "一点儿"], "correctSentence": ["抽烟对你没有一点儿好处。", "抽烟对你一点儿好处没有。"], "meaning": "Hút thuốc lá không có lợi cho sức khỏe.", "level": "HSK4" }, { "id": 1, "slashSentence": "这些/的/张小姐/是/都/。", "items": ["这些", "的", "张小姐", "是", "都", "。"], "correctSentence": ["这些都是张小姐的。"], "meaning": "Những cái này đều là của cô Trương.", "level": "HSK1" }, { "id": 2, "slashSentence": "我/菜/爱/不/这个/吃/。", "items": ["我", "菜", "爱", "不", "这个", "吃", "。"], "correctSentence": ["我不爱吃这个菜。"], "meaning": "Tôi không thích ăn món này.", "level": "HSK1" }, { "id": 3, "slashSentence": "在/哪儿/医生/？", "items": ["在", "哪儿", "医生", "？"], "correctSentence": ["医生在哪儿？"], "meaning": "Bác sĩ ở đâu?", "level": "HSK1" }, { "id": 4, "slashSentence": "家/怎么/我们/回/？", "items": ["家", "怎么", "我们", "回", "？"], "correctSentence": ["我们怎么回家？"], "meaning": "Bạn về nhà bằng cách gì?", "level": "HSK1" }, { "id": 5, "slashSentence": "学生/我/他/是/的/。", "items": ["学生", "我", "他", "是", "的", "。"], "correctSentence": ["他是我的学生。"], "meaning": "Cậu ấy là học sinh của tôi.", "level": "HSK1" }, { "id": 6, "slashSentence": "呢/李老师/电话/在/打/。", "items": ["呢", "李老师", "电话", "在", "打", "。"], "correctSentence": ["李老师在打电话呢。"], "meaning": "Cô Lý đang gọi điện thoại.", "level": "HSK1" }]);
-  // const wordOrderData = [{"id":54,"slashSentence":"会弹钢琴的人/羡慕/很/她/。","items":["会弹钢琴的人","羡慕","很","她","。"],"correctSentence":["她很羡慕会弹钢琴的人。","会弹钢琴的人很羡慕她。"],"meaning":"Cô ấy rất ngưỡng mộ những người biết chơi piano./Những người biết chơi piano rất ngưỡng mộ cô ấy.","level":"HSK4"},{"id":59,"slashSentence":"请/从小到大的顺序/按/排列/这些数字","items":["请","从小到大的顺序","按","排列","这些数字"],"correctSentence":["请按从小到大的顺序排列这些数字。","这些数字请按从小到大的顺序排列。"],"meaning":"Hãy sắp xếp các số này theo thứ tự từ bé đến lớn.","level":"HSK4"},{"id":63,"slashSentence":"对/很熟悉/我/这个城市","items":["对","很熟悉","我","这个城市"],"correctSentence":["我对这个城市很熟悉。","对这个城市我很熟悉。"],"meaning":"Tôi rất thân thuộc với thành phố này.","level":"HSK4"},{"id":72,"slashSentence":"好处/抽烟对你/没有/一点儿","items":["好处","抽烟对你","没有","一点儿"],"correctSentence":["抽烟对你没有一点儿好处。","抽烟对你一点儿好处没有。"],"meaning":"Hút thuốc lá không có lợi cho sức khỏe.","level":"HSK4"},{"id":1,"slashSentence":"这些/的/张小姐/是/都/。","items":["这些","的","张小姐","是","都","。"],"correctSentence":["这些都是张小姐的。"],"meaning":"Những cái này đều là của cô Trương.","level":"HSK1"},{"id":2,"slashSentence":"我/菜/爱/不/这个/吃/。","items":["我","菜","爱","不","这个","吃","。"],"correctSentence":["我不爱吃这个菜。"],"meaning":"Tôi không thích ăn món này.","level":"HSK1"},{"id":3,"slashSentence":"在/哪儿/医生/？","items":["在","哪儿","医生","？"],"correctSentence":["医生在哪儿？"],"meaning":"Bác sĩ ở đâu?","level":"HSK1"},{"id":4,"slashSentence":"家/怎么/我们/回/？","items":["家","怎么","我们","回","？"],"correctSentence":["我们怎么回家？"],"meaning":"Bạn về nhà bằng cách gì?","level":"HSK1"},{"id":5,"slashSentence":"学生/我/他/是/的/。","items":["学生","我","他","是","的","。"],"correctSentence":["他是我的学生。"],"meaning":"Cậu ấy là học sinh của tôi.","level":"HSK1"},{"id":6,"slashSentence":"呢/李老师/电话/在/打/。","items":["呢","李老师","电话","在","打","。"],"correctSentence":["李老师在打电话呢。"],"meaning":"Cô Lý đang gọi điện thoại.","level":"HSK1"}];
-  // const listItem = ['谢谢谢谢谢谢','我们','给','您','帮助', '的','！'];
-  // const listItem= wordOrderData[0].items;
-  // const answer = "谢谢谢谢谢谢您给我们的帮助！";
-  // const answer = wordOrderData[0].correctSentence;
   const lang = CHINESE; //eng or cn
   const [numTry, setNumTry] = useState(3);
   const [level, setLevel] = useState(lang===ENGLISH?"baby":"HSK1");
@@ -129,7 +128,7 @@ function GameWordOrderCn() {  ////lang = eng or cn
   const prevSubmitValue = useRef(''); // '' CORRECT WRONG
   const questionIdx = useRef(-1);
   const question = useRef(null);
-  const numQuestion = 2;
+  const numQuestion = 1;
   const [warningText, setWarningText] = useState('');
   // const [items, setItems] = useState(convertItems(["现在","工作","他","个","10","小时也","星期六","不","休息","。"]));
   const [items, setItems] = useState(convertItems([]));
@@ -137,8 +136,10 @@ function GameWordOrderCn() {  ////lang = eng or cn
   const [isShowMeaning, setIsShowMeaning] = useState(false);
   const [loading, setLoading] = useState(false);
   const { heightWindow, widthWindow } = useWindowDimensions();
+  const uid = useRef(-1);
+  const gameId = useRef(-1);
   const authHeader = useAuthHeader();
-  console.log({heightWindow, widthWindow});
+  
   function StartAndSubmitButton() {
     if(detectMobile()){ 
       if (gameState === "START" || gameState === "SHOWANSWER") {
@@ -213,16 +214,14 @@ function GameWordOrderCn() {  ////lang = eng or cn
   const nextQuestion = async () => {
 
     if (questionIdx.current === -1 || questionIdx.current === numQuestion - 1) {
-      console.log("go");
       setLoading(true);
       sendRequest(lang,numQuestion, level, authHeader).then(function (response) {
         if(response===null)return ;
-        wordOrderData.current=response;
+        wordOrderData.current=response.data;
         questionIdx.current = 0;
-        console.log(questionIdx.current);
         question.current = wordOrderData.current[questionIdx.current];
-        console.log(question.current);
-  
+        uid.current = response.uid;
+        gameId.current = response.gameId;
         setItems(question.current.items.map((word, index) => ({ id: `${index}`, content: `${word}` })));
         setNumTry(3);
         setGameState('SUBMIT');
@@ -233,9 +232,7 @@ function GameWordOrderCn() {  ////lang = eng or cn
     }
     else {
       questionIdx.current = questionIdx.current + 1;
-      console.log(questionIdx.current);
       question.current = wordOrderData.current[questionIdx.current];
-      console.log(question.current);
 
 
       setItems(question.current.items.map((word, index) => ({ id: `${index}`, content: `${word}` })));
@@ -249,9 +246,6 @@ function GameWordOrderCn() {  ////lang = eng or cn
 
   function handleSubmit() {
     let userSubmit = items.map((ob, idx) => (ob.content)).join(lang==="eng"?' ':'');
-    console.log(userSubmit);
-    console.log(items);
-    console.log(question.current.correctSentence);
     if (userSubmit === prevSubmitValue.current) {
       setWarningText('let try another answer !');
       return;
@@ -264,11 +258,13 @@ function GameWordOrderCn() {  ////lang = eng or cn
       setGameState('SHOWANSWER');
       setNumTry(0);
       submitStatus.current = 'CORRECT';
+      sendResult(authHeader, uid.current, gameId.current, question.current.id, "correct");
     }
     else {
       submitStatus.current = 'WRONG';
       if (numTry === 1) {
         setGameState('SHOWANSWER');
+        sendResult(authHeader,uid.current, gameId.current, question.current.id, "wrong");
       }
 
     }

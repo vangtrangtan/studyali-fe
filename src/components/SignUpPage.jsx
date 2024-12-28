@@ -11,7 +11,7 @@ import { SERVER } from './fileWithConstants';
 
 function SignupPage() {
     const [fullname, setFullName] = useState('');
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('noemail');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -30,6 +30,21 @@ function SignupPage() {
                 throw new Error("Passwords do not match");
             }
 
+            if((/\s/.test(username))){
+                setError('No space ! không cho phép khoảng trắng trong username');
+                return;
+            }
+
+            if((/[^0-9a-zA-Z-._]/.test(username))){
+                setError('Only alphabets, numbers and some specials - _ . are allowed');
+                return;
+            }
+
+            if(username.length>40){
+                setError('Maximum length is 40 ! username quá dài');
+                return;
+            }
+
             const response = await axios.post(SERVER+'/auth/signup', {
                 fullname,
                 email,
@@ -37,8 +52,14 @@ function SignupPage() {
                 password,
             });
             // Handle successful signup
-            console.log(response.data);
-            history('/login');
+            if(response.data.status ===false){
+                alert(response.data.message);
+            }
+            else{
+                alert("register succcess !");
+                history('/login');
+            }
+            
         } catch (error) {
             // Handle signup error
             console.error('Signup failed:', error.response ? error.response.data : error.message);
@@ -55,8 +76,8 @@ function SignupPage() {
                     {error && <p className="text-danger">{error}</p>}
                     <MDBInput wrapperClass='mb-3' id='fullname' placeholder={"Full Name"} value={fullname} type='text'
                               onChange={(e) => setFullName(e.target.value)}/>
-                    <MDBInput wrapperClass='mb-3' placeholder='Email Address' id='email' value={email} type='email'
-                              onChange={(e) => setEmail(e.target.value)}/>
+                    {/* <MDBInput wrapperClass='mb-3' placeholder='Email Address' id='email' value={email} type='email'
+                              onChange={(e) => setEmail(e.target.value)}/> */}
                     <MDBInput wrapperClass='mb-3' placeholder='Username' id='username' type='text' value={username}
                               onChange={(e) => setUsername(e.target.value)}/>
                     <MDBInput wrapperClass='mb-3' placeholder='Password' id='password' type='password' value={password}

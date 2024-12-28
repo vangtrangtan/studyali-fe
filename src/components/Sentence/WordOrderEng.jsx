@@ -106,7 +106,6 @@ const sendRequest = async (lang, numQuestion, level, authHeader) => {
     , timeout: 5000
   })
     .then(function (response) {
-      console.log(response);
       return response.data;
     })
     .catch(function (error) {
@@ -116,6 +115,28 @@ const sendRequest = async (lang, numQuestion, level, authHeader) => {
     });
   return res;
 }
+
+function sendResult(auth, uid, game_id, question_id, result) {
+  const handleResquest = async () => {
+      try {
+          const response = await axios.post(SERVER + '/score/submit', {
+              uid,
+              game_id,
+              question_id,
+              result,
+          },
+              {
+                  headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': auth }
+              }
+          );
+      } catch (error) {
+          // Handle signup error
+          console.error('sendResult failed:', error.response ? error.response.data : error.message);
+      }
+  };
+  handleResquest();
+}
+
 function GameWordOrderEng() {
   // const history = useNavigate();
   // if(!checkLoginManual()){
@@ -130,7 +151,7 @@ function GameWordOrderEng() {
   const prevSubmitValue = useRef(''); // '' CORRECT WRONG
   const questionIdx = useRef(-1);
   const question = useRef(null);
-  const numQuestion = 2;
+  const numQuestion = 1;
   const [warningText, setWarningText] = useState('');
   // const [items, setItems] = useState(convertItems(["现在","工作","他","个","10","小时也","星期六","不","休息","。"]));
   const [items, setItems] = useState(convertItems([]));
@@ -138,8 +159,10 @@ function GameWordOrderEng() {
   const [isShowMeaning, setIsShowMeaning] = useState(false);
   const [loading, setLoading] = useState(false);
   const { heightWindow, widthWindow } = useWindowDimensions();
+  const uid = useRef(-1);
+  const gameId = useRef(-1);
   const authHeader = useAuthHeader();
-  console.log({heightWindow, widthWindow});
+  
   function StartAndSubmitButton() {
 
     if(detectMobile()){ 
@@ -215,15 +238,14 @@ function GameWordOrderEng() {
   const nextQuestion = async () => {
 
     if (questionIdx.current === -1 || questionIdx.current === numQuestion - 1) {
-      console.log("go");
       setLoading(true);
       sendRequest(lang,numQuestion, level, authHeader).then(function (response) {
         if(response===null)return ;
-        wordOrderData.current=response;
+        wordOrderData.current=response.data;
         questionIdx.current = 0;
-        console.log(questionIdx.current);
         question.current = wordOrderData.current[questionIdx.current];
-        console.log(question.current);
+        uid.current = response.uid;
+        gameId.current = response.gameId;
   
         setItems(question.current.items.map((word, index) => ({ id: `${index}`, content: `${word}` })));
         setNumTry(3);
@@ -235,9 +257,7 @@ function GameWordOrderEng() {
     }
     else {
       questionIdx.current = questionIdx.current + 1;
-      console.log(questionIdx.current);
       question.current = wordOrderData.current[questionIdx.current];
-      console.log(question.current);
 
 
       setItems(question.current.items.map((word, index) => ({ id: `${index}`, content: `${word}` })));
@@ -251,9 +271,6 @@ function GameWordOrderEng() {
 
   function handleSubmit() {
     let userSubmit = items.map((ob, idx) => (ob.content)).join(lang==="eng"?' ':'');
-    console.log(userSubmit);
-    console.log(items);
-    console.log(question.current.correctSentence);
     if (userSubmit === prevSubmitValue.current) {
       setWarningText('let try another answer !');
       return;
@@ -266,11 +283,13 @@ function GameWordOrderEng() {
       setGameState('SHOWANSWER');
       setNumTry(0);
       submitStatus.current = 'CORRECT';
+      sendResult(authHeader, uid.current, gameId.current, question.current.id, "correct");
     }
     else {
       submitStatus.current = 'WRONG';
       if (numTry === 1) {
         setGameState('SHOWANSWER');
+        sendResult(authHeader,uid.current, gameId.current, question.current.id, "wrong");
       }
 
     }

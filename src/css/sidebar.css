@@ -1,0 +1,97 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    background-image: url('../mybackground.jpg');
+    /* background-image: url('mybackground-mobile.jpeg'); */
+    background-repeat: 'no-repeat';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+.sidebar {
+    min-width: 280px;
+    max-width: 280px;
+    min-height: 100vh;
+    /* margin-right: -250px; */
+    
+}
+
+.topuser {
+    font-size: 12px;
+    
+}
+.topuser table{
+    padding: 100%;
+    text-align: center;
+    font-family:  "sans-serif";
+    border-color: rgb(184, 180, 180);
+    border-style: solid !important;
+}
+.topuser .caption{
+    border-color: rgb(184, 180, 180);
+    background-color: white;
+    border-style: solid;
+    border-bottom-style: unset;
+    padding-left: 4%;
+    font-size: 17px;
+    font-weight: bold;
+    border-top-left-radius:15px;
+    border-top-right-radius:15px;
+}
+.topuser tr td {
+    padding-top:  5px !important;
+    padding-bottom:  5px !important;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 120px;
+}
+.topuser tr th {
+    font-size: 13px;
+}
+
+.sidebar.active {
+    margin-right: -250px;
+}
+
+/* CSS for mobile */
+@media screen and (max-width: 960px) {
+    .sidebar {
+        min-width: 250px;
+        max-width: 250px;
+        min-height: 100vh;
+        margin-left: -250px;
+        z-index: 5;
+    }
+
+    .sidebar.active {
+        margin-left: 0;
+    }
+    .topuser {
+        font-size: 12px;
+    }
+    .topuser .caption{
+        border-top-left-radius:10px;
+        border-top-right-radius:10px;
+    }
+    .topuser tr td {
+        padding-top:  5px !important;
+        padding-bottom:  5px !important;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 50px;
+    }
+}

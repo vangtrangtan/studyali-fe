@@ -1,4 +1,4 @@
-import {BrowserRouter,Route, Routes, useNavigate} from 'react-router-dom';
+import {BrowserRouter,Route, Routes, useNavigate, Redirect} from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import createStore from 'react-auth-kit/createStore';
 import Header from './components/NavbarAndFooter/Header';
@@ -51,12 +51,13 @@ const App = () => {
       useEffect(() => {
          setLanguage(CHINESE);
        }, []);
-      
+      return <Home/>;
    }
    const UpdateLanguageEng = () => {   
       useEffect(() => {
          setLanguage(ENGLISH);
        }, []);     
+       return <Home/>;
    }
 
    console.log("lang"+language);
@@ -79,6 +80,7 @@ const App = () => {
                   <Route path="/logout" element={<LogoutPage/>}/>
                   <Route path="/about" element={<About/>}/>
                   <Route path="/home" element={<Home/>}/>
+                  <Route path="/" element={<Home/>}/>
                </Routes>
                
                <Footer />

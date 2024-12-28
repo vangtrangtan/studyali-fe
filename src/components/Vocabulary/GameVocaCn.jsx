@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import useWindowDimensions from "../useWindowDimensions";
 import { CHINESE, ENGLISH, MAX_WIDTH, SERVER } from "../fileWithConstants";
 import '../../App.css';
-import { detectMobile } from '../utils'; 
+import { detectMobile } from '../utils';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 
-function HandleQuestion({ question, setAnswers, setCurrentQuestion }) {
+function HandleQuestion({ auth, uid, gameId, question, setAnswers, setCurrentQuestion }) {
 
     const [countDown, setCountDown] = useState(5);
     const [showCandidate, setShowCandidate] = useState(false);
@@ -27,6 +27,12 @@ function HandleQuestion({ question, setAnswers, setCurrentQuestion }) {
         setCurrentQuestion(prevState => prevState + 1);
         setCountDown(5);
         setShowCandidate(false);
+        let res = "no_answer";
+        if (canId != -1) {
+            if (canId === question.wordId) res = "correct";
+            else res = "wrong";
+        }
+        sendResult(auth, uid, gameId, question.questionId, res);
     }
 
     useEffect(() => {
@@ -56,6 +62,27 @@ function HandleQuestion({ question, setAnswers, setCurrentQuestion }) {
         </div>);
 }
 
+function sendResult(auth, uid, game_id, question_id, result) {
+    const handleResquest = async () => {
+        try {
+            const response = await axios.post(SERVER + '/score/submit', {
+                uid,
+                game_id,
+                question_id,
+                result,
+            },
+                {
+                    headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': auth }
+                }
+            );
+        } catch (error) {
+            // Handle signup error
+            console.error('sendResult failed:', error.response ? error.response.data : error.message);
+        }
+    };
+    handleResquest();
+}
+
 function LoadResult({ answers, listQuestion }) {
     let correctCnt = 0;
     answers.map(a => {
@@ -82,18 +109,22 @@ function LoadResult({ answers, listQuestion }) {
 
 
 
+
 export default function GameVocaCn() {
     const language = CHINESE; // eng or cn
-    const URLGetQuestion = SERVER+'/api/'+language+'/vocabulary/game/getquestion';
+    const URLGetQuestion = SERVER + '/api/' + language + '/vocabulary/game/getquestion';
     const authHeader = useAuthHeader();
     const [listQuestion, setListQuestion] = useState(Array(0))
     // const listQuestion = [{"questionId":1,"wordId":2,"word":"爱 1","meaning":"tinh yeu la chi","candidates":[{"value":"option1","id":1},{"value":"option2","id":2},{"value":"option3","id":3},{"value":"option4","id":4},{"value":"option5","id":5},{"value":"option6","id":6}]},{"questionId":1,"wordId":2,"word":"爱 2","meaning":"tinh yeu la chi","candidates":[{"value":"option1","id":1},{"value":"option2","id":2},{"value":"option3","id":3},{"value":"option4","id":4},{"value":"option5","id":5},{"value":"option6","id":6}]}];
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState(null);
     const [numQuestion, SetNumQuestion] = useState(2);
-    const [level, SetLevel] = useState(language===CHINESE?"HSK 1":"junior");
+    const [level, SetLevel] = useState(language === CHINESE ? "HSK 1" : "junior");
     const [loading, setLoading] = useState(false);
     const { heightWindow, widthWindow } = useWindowDimensions();
+    const uid = useRef(-1);
+    const gameId = useRef(-1);
+
     function SelectNumQuestion() {
         let listOption = []
         for (let i = 2; i <= 6; i++) {
@@ -104,7 +135,7 @@ export default function GameVocaCn() {
             SetNumQuestion(e.target.value);
         };
         return (
-            <select style={{marginLeft:"1%"}} value={numQuestion} onChange={handleChange}>
+            <select style={{ marginLeft: "1%" }} value={numQuestion} onChange={handleChange}>
                 {listOption}
             </select>
         )
@@ -115,9 +146,9 @@ export default function GameVocaCn() {
         const handleChange = (e) => {
             SetLevel(e.target.value);
         };
-        if(language===CHINESE){
+        if (language === CHINESE) {
             return (
-                <select style={{marginLeft:"1%"}}value={level} onChange={handleChange}>
+                <select style={{ marginLeft: "1%" }} value={level} onChange={handleChange}>
                     <option value="HSK 1">HSK 1</option>
                     <option value="HSK 2">HSK 2</option>
                     <option value="HSK 3">HSK 3</option>
@@ -125,74 +156,78 @@ export default function GameVocaCn() {
                 </select>
             )
         }
-        else{
+        else {
             return (
-                <select style={{marginLeft:"1%"}} value={level} onChange={handleChange}>
+                <select style={{ marginLeft: "1%" }} value={level} onChange={handleChange}>
                     <option value="junior">junior</option>
                     {/* <option value="HSK 4">HSK 4</option> */}
                 </select>
             )
         }
-        
+
 
     }
 
     function startGame() {
 
-        console.log("go "+authHeader);
         let notResponse = true;
         axios.get(URLGetQuestion, {
             params: {
                 num: numQuestion,
                 level: level
             },
-            headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json",'Authorization': authHeader }
+            headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': authHeader }
             , timeout: 5000
         })
             .then(function (response) {
                 console.log(response);
-                notResponse=false;
+                if (response === null) {
+                    alert("Error get question !!! please contact ADMIN");
+                }
+                notResponse = false;
                 setLoading(false);
-                setListQuestion(response.data);
+                setListQuestion(response.data.data);
+                uid.current = response.data.uid;
+                gameId.current = response.data.gameId;
+
             })
             .catch(function (error) {
-                console.log("wa");
                 console.log(error);
                 alert("Error get question !!! please contact ADMIN");
             });
-        if(notResponse)setLoading(true);
+        if (notResponse) setLoading(true);
         setAnswers(Array(0));
         setCurrentQuestion(0);
-    }  
+    }
 
     let prepareGrid = (
-        detectMobile()?
+        detectMobile() ?
 
-        (<>
-            <div><button className="generalbutton" style={{ width:"40%",height:"50px", marginTop: "5%",marginLeft:"30%" }} onClick={() => startGame()}>START</button></div>
-            <div className='grid-container' style={{ marginLeft:"-5%" }}>
-                <div className="grid-item">Level  <SelectLevel /></div>
-                <div className="grid-item">Question <SelectNumQuestion /></div>
-            </div>
-        </>)
-        
-        :
-        (< >
-            <div className='grid-container'>
-                <div className="grid-item">Level:<SelectLevel /></div>
-                <div className="grid-item">Number of question:<SelectNumQuestion /></div>
-                <div className="grid-item"><button className="generalbutton" style={{ width: "100%", height:"50px",marginTop: "-5px" }} onClick={() => startGame()}>START</button></div>
-            </div>
-        </>)
+            (<>
+                <div><button className="generalbutton" style={{ width: "40%", height: "50px", marginTop: "5%", marginLeft: "30%" }} onClick={() => startGame()}>START</button></div>
+                <div className='grid-container' style={{ marginLeft: "-5%" }}>
+                    <div className="grid-item">Level  <SelectLevel /></div>
+                    <div className="grid-item">Question <SelectNumQuestion /></div>
+                </div>
+            </>)
+
+            :
+            (< >
+                <div className='grid-container'>
+                    <div className="grid-item">Level:<SelectLevel /></div>
+                    <div className="grid-item">Number of question:<SelectNumQuestion /></div>
+                    <div className="grid-item"><button className="generalbutton" style={{ width: "100%", height: "50px", marginTop: "-5px" }} onClick={() => startGame()}>START</button></div>
+                </div>
+            </>)
     )
-    
-    
+
+
 
     console.log(currentQuestion);
 
     console.log(answers);
 
-    if(loading)return <div className='game'><div className='loading'>Loading ... </div></div>;
+    if (loading) return <div className='game'><div className='loading'>Loading ... </div></div>;
 
     if (answers === null) {   //init state
         return <div className='game'>{prepareGrid}</div>;
@@ -207,7 +242,8 @@ export default function GameVocaCn() {
         else {   //onplay state
             const ques = listQuestion[currentQuestion];
             console.log("onplay");
-            return (<div className='game' ><HandleQuestion question={ques} setAnswers={setAnswers} setCurrentQuestion={setCurrentQuestion} /></div>);
+            return (<div className='game' ><HandleQuestion auth={authHeader} uid={uid.current} 
+                gameId={gameId.current} question={ques} setAnswers={setAnswers} setCurrentQuestion={setCurrentQuestion} /></div>);
         }
     }
 
