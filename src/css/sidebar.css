@@ -38,6 +38,7 @@ body {
     font-family:  "sans-serif";
     border-color: rgb(184, 180, 180);
     border-style: solid !important;
+    background-color: white;
 }
 .topuser .caption{
     border-color: rgb(184, 180, 180);

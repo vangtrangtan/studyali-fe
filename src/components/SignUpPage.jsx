@@ -34,7 +34,10 @@ function SignupPage() {
                 setError('No space ! không cho phép khoảng trắng trong username');
                 return;
             }
-
+            if((/\s/.test(password))){
+                setError('No space ! không cho phép khoảng trắng trong password');
+                return;
+            }
             if((/[^0-9a-zA-Z-._]/.test(username))){
                 setError('Only alphabets, numbers and some specials - _ . are allowed');
                 return;

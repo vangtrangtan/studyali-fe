@@ -21,6 +21,8 @@ import AuthProvider from 'react-auth-kit';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import Home from './components/HomePage';
 import PrivateRoute from './components/PrivateRoute';
+import ProfilePage from './components/ProfileAndSetting/ProfilePage';
+import { getDefaultServerFromCLient } from './components/utils';
 function disableDevtool() {
    // Disable right-click
    document.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -45,7 +47,7 @@ function disableDevtool() {
  }
  
 const App = () => {
-   const [language, setLanguage] = useState(ENGLISH);
+   const [language, setLanguage] = useState(getDefaultServerFromCLient()===ENGLISH?ENGLISH:CHINESE);
    const UpdateLanguageCn = () => {
       
       useEffect(() => {
@@ -80,7 +82,9 @@ const App = () => {
                   <Route path="/logout" element={<LogoutPage/>}/>
                   <Route path="/about" element={<About/>}/>
                   <Route path="/home" element={<Home/>}/>
+                  <Route path="/profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>}/>
                   <Route path="/" element={<Home/>}/>
+                  <Route path="*" element={<Home/>} />
                </Routes>
                
                <Footer />

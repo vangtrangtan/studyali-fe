@@ -1,0 +1,105 @@
+.barchoice:hover {
+    background-color: #99ac46;;
+  }
+
+  
+.barchoice.active {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
+}
+.profileWrap {
+  max-width: 1000px;
+  margin-top:-100px;
+}
+.profilediv {
+  background-color: rgba(243, 231, 209, 0.863);
+}
+
+.statsdiv {
+  background-color: rgba(243, 231, 209, 0.849);
+}
+
+.statsdiv .dropdown {
+  position: relative;
+  right: auto;
+  left: auto;
+  font-size: 0.875rem;
+  /* min-width: 10rem;
+  max-width: 70px; */
+  width: 110px;
+  padding: 0 0;
+  list-style: none;
+  /* background-color: #f1e7c5b7; */
+  border-radius: 0.5rem;
+}
+
+
+.statsdiv .dropdown.show {
+  display: block;
+
+}
+
+.statsdiv .dropdown {
+  float: left;
+}
+
+.statsdiv .dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: black;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+  cursor: pointer;
+}
+
+.statsdiv .dropdown-content {
+  display: none;
+  position: absolute;
+}
+
+.statsdiv .dropdown-content a {
+  float: none;
+  color: black;
+  padding: 15px 5px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  width: 100px;
+  background-color: rgba(243, 231, 209, 0.952);
+  cursor: pointer;
+}
+
+.statsdiv .dropdown-content a:hover {
+  background-color: #d2f5c9;
+}
+
+.statsdiv .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.sloganDiv textarea{
+  display: block;
+  height: 120px;
+  resize: none;
+}
+/* CSS for mobile */
+@media screen and (max-width: 960px) {
+  .profileWrap {
+    max-width: 1000px;
+    margin-top: 0px;
+  }
+  .barchoice {
+    width: 20%;
+  }
+  .profilediv {
+    background-color: rgba(243, 231, 209, 0.863);
+  }
+  
+  .statsdiv {
+    background-color: rgba(243, 231, 209, 0.849);
+  }
+}

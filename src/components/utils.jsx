@@ -8,3 +8,9 @@ export function checkLoginManual(){
     // const userToken = JSON.parse(tokenString);
     return (tokenString!==null);
 };
+export function getDefaultServerFromCLient(){
+    const tokenString = localStorage.getItem('_auth__state');
+    if(tokenString===null)return null;
+    const userToken = JSON.parse(tokenString);
+    return userToken.default_server;
+};

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import  { Navigate } from 'react-router-dom'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
@@ -14,6 +15,7 @@ import { SERVER } from './fileWithConstants';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { rerenderNavbar } from './NavbarAndFooter/Navbar';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import { checkLoginManual } from './utils';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -21,7 +23,9 @@ function LoginPage() {
     const [error, setError] = useState('');
     const history = useNavigate();
     const signIn = useSignIn();
-    console.log(useIsAuthenticated());
+    if(checkLoginManual()){
+        return <Navigate to='/home'/>
+    }
     const handleLogin = async () => {
         try {
             if (!username || !password) {
@@ -30,7 +34,6 @@ function LoginPage() {
             }
 
             const response = await axios.post(SERVER+'/auth/signin', { username, password });
-            console.log('Login check:', response.data);
             if(response.data.jwt!==null){
                 signIn({
                     auth: {
@@ -39,6 +42,7 @@ function LoginPage() {
                     },
                     userState: {
                         name: username,
+                        default_server: response.data.defaultServer,
                         uid: 0
                     }
                 })
@@ -76,7 +80,6 @@ function LoginPage() {
 export function LogoutPage(){
     const history = useNavigate();
     const authHeader = useAuthHeader();
-    console.log(authHeader);
     const signOut = useSignOut()
     signOut();
     axios.post(SERVER+"/logout", {
@@ -84,83 +87,11 @@ export function LogoutPage(){
         , timeout: 5000
     })
         .then(function (response) {
-            console.log(response);
             history('/home');
         })
         .catch(function (error) {
-            console.log(error);
             history('/home');
         });
 }
-
-
-// export const SyncLogin =()=>{
-//     const signOut = useSignOut();
-//     const signIn = useSignIn();
-//     const isAuthenticated = useIsAuthenticated();
-//     let newUser=null;
-//     let newToken=null;
-//     const history = useNavigate();
-//     const onStorageChange=(e)=>{
-//       // console.log(e);
-//       console.log(e.key);
-//       if(e.key==="_auth_"){
-//         // console.log("new");
-//         console.log(e.newValue);
-//         // console.log("p"+isAuthenticated);
-//         if(e.newValue===null){
-//             console.log(e);
-//           signOut();
-//           history('/about');
-//         }
-//         else{
-//           newToken=e.newValue;
-//           console.log(isAuthenticated+' '+newUser+ ' '+newToken);
-//           if(newUser!==null && newToken!==null){
-//             alert("aaa");
-//             // if(!isAuthenticated){
-//             //       signIn({auth: {
-//             //         token: newToken,
-//             //         type: 'Bearer'
-//             //     },
-//             //     userState: newUser
-//             //   });
-              
-//               history('/about');
-//             // }
-//             newUser=null;
-//             newToken=null;
-//           }
-//         }
-        
-//       }
-//       if(e.key==="_auth__state"){
-//         newUser=e.newValue;
-//         console.log(isAuthenticated+' '+newUser+ ' '+newToken);
-//         if(newUser!==null && newToken!==null){
-//             alert("bbb");
-//         //   if(!isAuthenticated){
-//             // signIn({auth: {
-//             //       token: newToken,
-//             //       type: 'Bearer'
-//             //   },
-//             //   userState: newUser
-//             // });
-//             history('/about');
-//         //   }
-//           newUser=null;
-//           newToken=null;
-//         }
-        
-//       }
-//     }
-//     useEffect(() => {
-//       window.addEventListener('storage',onStorageChange);
-  
-//       return () => {
-//         window.removeEventListener('storage',onStorageChange);
-//       };
-//     },[]);
-//   }
 
 export default LoginPage;

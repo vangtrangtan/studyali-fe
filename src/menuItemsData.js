@@ -49,7 +49,7 @@ export const menuItemsLogin = [
 export const menuItemsLogout = [
   {
     title: 'Profile',
-    url: '/home',
+    url: '/profile',
   },
   {
     title: 'Log out',
