@@ -69,7 +69,6 @@ const App = () => {
     return<BrowserRouter>
             <div><Header language={language} setLanguage={setLanguage}/>
             <div className='main-body'>
-            
                <Routes>
                   <Route path="/chinese/vocabulary" element={<PrivateRoute><GameVocaCn/></PrivateRoute> } />
                   <Route path="/chinese/wordorder" element={<PrivateRoute><GameWordOrderCn/></PrivateRoute>} />
@@ -86,8 +85,7 @@ const App = () => {
                   <Route path="/" element={<Home/>}/>
                   <Route path="*" element={<Home/>} />
                </Routes>
-               
-               <Footer />
+            <Footer />
             </div>
             </div>
          </BrowserRouter>

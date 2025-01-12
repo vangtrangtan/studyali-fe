@@ -11,6 +11,8 @@
 .profileWrap {
   max-width: 1000px;
   margin-top:-100px;
+  min-height: 100vh;
+  height: 100%;
 }
 .profilediv {
   background-color: rgba(243, 231, 209, 0.863);
@@ -91,6 +93,8 @@
   .profileWrap {
     max-width: 1000px;
     margin-top: 0px;
+    min-height: 100vh;
+    height: 100%;
   }
   .barchoice {
     width: 20%;

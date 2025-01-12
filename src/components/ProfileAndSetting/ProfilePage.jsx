@@ -155,7 +155,7 @@ export default function ProfilePage() {
 
   return (
     <section>
-      <MDBContainer className="py-1 profileWrap">
+      <MDBContainer className="py-1 profileWrap" style={{height:"100%"}}>
         <MDBRow className='mb-3'>
         <MDBNavbar expand='lg' style={{backgroundColor:"#f3e7d1b7"}}>
           <MDBContainer fluid>

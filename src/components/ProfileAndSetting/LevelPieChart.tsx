@@ -122,8 +122,11 @@ export default function PieChartComponent({data} : {data:Array<{name:any,value:a
         else if(e.name==="HSK3" || e.name==="SENIOR"){
           return  "#6a91dacc";  //blue
         }
+        else if(e.name==="HSK4" || e.name==="MASTER"){
+          return  "#e693eecc";  //pink
+        }
         else{
-          return  "#e693eecc"; //pink
+          return  "#bb384e"; //red
         }
       }
       )

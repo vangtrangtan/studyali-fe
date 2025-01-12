@@ -15,12 +15,13 @@ const Home = () => {
         <article>
             <h4>Server tiếng Anh</h4>
             <p>Server tiếng Anh mang đến hai loại bài tập là trắc nghiệm từ vựng và sắp xếp câu,
-                trong đó phần từ vựng giúp ôn tập từ vựng hiện đang hỗ trợ 3 cấp độ:
+                trong đó phần từ vựng giúp ôn tập từ vựng hiện đang hỗ trợ 4 cấp độ:
             </p>
             <ul>
                 <li><p>Starter: top 100 từ vựng đơn giản và phổ biết nhất</p></li>
                 <li><p>Junior: top 300 từ vựng phổ biết nhất - tương ứng level A1</p></li>
                 <li><p>Senior: 500 từ vựng nằm trong top 2000 từ vựng phổ biết nhất - tương ứng level B1</p></li>
+                <li><p>Master: từ vựng level B2</p></li>
             </ul>
             <p>Phần sắp xếp câu cung cấp gần 100 bài tập với độ khó A1</p>
             <h4>Server tiếng Trung</h4>

@@ -162,6 +162,7 @@ export default function GameVocaCn() {
                     <option value="starter">starter</option>
                     <option value="junior">junior</option>
                     <option value="senior">senior</option>
+                    <option value="master">master</option>
                     {/* <option value="HSK 4">HSK 4</option> */}
                 </select>
             )
