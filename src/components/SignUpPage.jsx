@@ -43,8 +43,8 @@ function SignupPage() {
                 return;
             }
 
-            if(username.length>40){
-                setError('Maximum length is 40 ! username quá dài');
+            if(username.length>30){
+                setError('Maximum length is 30 ! username quá dài');
                 return;
             }
 

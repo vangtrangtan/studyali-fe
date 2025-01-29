@@ -1,44 +1,12 @@
-import { menuItemsCnData,menuItemsEngData,menuItemsLogin, menuItemsLogout } from '../../menuItemsData';
-import MenuItems from './MenuItems';
+import React, { useEffect, useState } from "react";
+import { MdOutlineMenu } from 'react-icons/md';
+import { menuItemsCnData, menuItemsEngData, menuItemsLogin, menuItemsLogout } from '../../menuItemsData';
+import { CHINESE } from '../fileWithConstants';
 import useWindowDimensions from "../useWindowDimensions";
-import { checkLoginManual, detectMobile, isLoginManual } from '../utils';
-import {MdOutlineMenu} from 'react-icons/md'
-import React, { useState, useRef, useEffect } from "react";
-import { CHINESE,ENGLISH } from '../fileWithConstants';
-import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated'
-import useSignOut from 'react-auth-kit/hooks/useSignOut';
-import useSignIn from 'react-auth-kit/hooks/useSignIn';
-import { useNavigate } from 'react-router-dom';
+import { checkLoginManual, detectMobile } from '../utils';
+import MenuItems from './MenuItems';
 
-export const SyncLogin =()=>{
-  const signOut = useSignOut();
-  const signIn = useSignIn();
-  const isAuthenticated = useIsAuthenticated();
 
-  const history = useNavigate();
-  const onStorageChange=(e)=>{
-    // console.log(e);
-    console.log(e.key);
-    if(e.key==="_auth_"){
-      // console.log("new");
-      console.log(e.newValue);
-      // console.log("p"+isAuthenticated);
-      if(e.newValue===null){
-          console.log(e);
-        signOut();
-        history('/home');
-      }
-    
-    }
-  }
-  useEffect(() => {
-    window.addEventListener('storage',onStorageChange);
-
-    return () => {
-      window.removeEventListener('storage',onStorageChange);
-    };
-  },[]);
-}
 
 const Navbar = ({language}) => {
   const [click, setClick] = useState(false);
@@ -48,7 +16,6 @@ const Navbar = ({language}) => {
   const closeMenu = () => {setClick(false);}
   
   //check log in log out
-  // console.log("ww"+isAuthenticated);
   useEffect(() => {
     const interval = setInterval(() => {
       setRerender(!rerender);
@@ -59,19 +26,20 @@ const Navbar = ({language}) => {
     };
   });
 
-  // SyncLogin();
   
   var mymenu = (language===CHINESE?menuItemsCnData:menuItemsEngData);
-  // console.log("c"+useIsAuthenticated());
-  // console.log(checkLoginManual());
+
   if (!checkLoginManual()){
-    mymenu=[...mymenu,...menuItemsLogin];
-    // console.log("not login");
+    mymenu=[...mymenu,{
+      title: 'Gym',
+      url: (language===CHINESE?'/chinese':'/english')+'/gym/public'
+    },...menuItemsLogin];
   }
   else{
-    mymenu=[...mymenu,...menuItemsLogout];
-    // console.log("login");
-    
+    mymenu=[...mymenu,{
+      title: 'Gym',
+      url: '/gym'
+    },...menuItemsLogout];    
   }
 
 

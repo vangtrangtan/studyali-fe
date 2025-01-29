@@ -18,10 +18,10 @@ const About = () => {
         </>
     );
     if(detectMobile()){
-        return <div style={{marginLeft:"10%",marginRight:"10%"}}>{content}</div>
+        return <div style={{marginLeft:"10%",marginRight:"10%", height:"100vh"}}>{content}</div>
     }
     else{
-        return <div style={{marginLeft:"25%",marginRight:"25%"}}>{content}</div>
+        return <div style={{marginLeft:"25%",marginRight:"25%", height:"100vh"}}>{content}</div>
     }
 }
 

@@ -1,0 +1,123 @@
+.exercise {
+    
+    /* margin-top: 100px; */
+    margin-left: 23%;
+    max-width: 1000px;
+    width: 100%;
+    margin-bottom: 50px;
+    min-height: calc(100vh - 40px - 50px);
+    height: 100%;
+    background-color: rgba(243, 231, 209, 0.863);
+    border-color: grey !important;
+    border:2px solid;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    
+}
+
+.statement {
+    max-width: 800px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    height: auto;
+    font-size: x-large;
+    margin-left: 2%;
+    white-space: pre-wrap;
+    /* background-color: rgba(47, 0, 255, 0.555); */
+}
+
+.exercise .optionchoice {
+    max-width: 800px;
+    min-height: 80px;
+}
+.exercise .optionvalue {
+    margin-left: 0%;
+    height:50px;
+    vertical-align:middle;
+    display: table-cell;
+}
+
+.exercise .optionchoicebutton:hover {
+    background: #d2f5c9;
+}
+
+.exercise  .optionchoicebutton {
+
+    background-color: rgba(226, 222, 222, 0.788);
+    border: 2px solid rgb(211, 190, 190);
+    color: black;
+    border-radius: 50%;
+    transition-duration: 0.4s;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
+    font-size: medium;
+    cursor: pointer;
+    display: inline;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    width: 50px;
+    min-width: 50px;
+    height: 50px;
+    padding: 0;
+    margin-left: 0px;
+}
+
+/* CSS for mobile */
+@media screen and (max-width: 960px) {
+    .exercise {
+        margin-left: 0;
+        margin-top: 100px;
+        margin-bottom: 40px;
+        max-width: calc(100vh - 30px - 40px);
+        min-height: 100vh;
+        height: 100%;
+        background-color: rgba(243, 231, 209, 0.863);
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+    }
+
+    .statement {
+        max-width: 100%;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        height: auto;
+        font-size: x-large;
+        margin-left: 2%;
+        white-space: pre-wrap;
+        /* background-color: rgba(47, 0, 255, 0.555); */
+    }
+    .exercise .optionchoice {
+        max-width: 800px;
+        min-height: 80px;
+    }
+    .exercise .optionvalue {
+        margin-left: 0%;
+        height:50px;
+        vertical-align:middle;
+        display: table-cell;
+    }
+    .exercise .optionchoicebutton:hover {
+        background: #d2f5c9;
+    }
+
+    .exercise .optionchoicebutton {
+
+        background-color: rgba(226, 222, 222, 0.788);
+        border: 2px solid rgb(211, 190, 190);
+        color: black;
+        border-radius: 50%;
+        transition-duration: 0.4s;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
+        font-size: medium;
+        cursor: pointer;
+        display: inline;
+        justify-content: center;
+        align-items: center;
+        float: left;
+        width: 50px;
+        min-width: 50px;
+        height: 50px;
+        padding: 0;
+        margin-left: 0px;
+    }
+}

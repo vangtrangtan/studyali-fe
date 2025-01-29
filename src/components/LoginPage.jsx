@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import  { Navigate } from 'react-router-dom'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import useSignOut from 'react-auth-kit/hooks/useSignOut';
+import { Navigate, useNavigate } from 'react-router-dom';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
     MDBContainer,
-    MDBInput,
-    MDBBtn,
+    MDBInput
 } from 'mdb-react-ui-kit';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { SERVER } from './fileWithConstants';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { rerenderNavbar } from './NavbarAndFooter/Navbar';
-import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
-import { checkLoginManual } from './utils';
+import { SERVER } from './fileWithConstants';
+import { checkLoginManual, saveLangToLocalStorage } from './utils';
 
-function LoginPage() {
+function LoginPage({language, setLanguage}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -46,6 +42,8 @@ function LoginPage() {
                         uid: 0
                     }
                 })
+                saveLangToLocalStorage(response.data.defaultServer);
+                setLanguage(response.data.defaultServer);
                 history('/home');
             }
             else{

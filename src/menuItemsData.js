@@ -10,11 +10,7 @@ export const menuItemsCnData = [
   {
     title: 'Word Order',
     url: '/chinese/wordorder',
-  },
-  {
-    title: 'About',
-    url: '/about',
-  },
+  }
 ];
 export const menuItemsEngData = [
   {
@@ -28,14 +24,15 @@ export const menuItemsEngData = [
   {
     title: 'Word Order',
     url: '/english/wordorder',
-  },
+  }
+  
+];
+
+export const menuItemsLogin = [
   {
     title: 'About',
     url: '/about',
   },
-];
-
-export const menuItemsLogin = [
   {
     title: 'Log in',
     url: '/login',
@@ -47,6 +44,10 @@ export const menuItemsLogin = [
 ];
 
 export const menuItemsLogout = [
+  {
+    title: 'About',
+    url: '/about',
+  },
   {
     title: 'Profile',
     url: '/profile',

@@ -109,7 +109,7 @@ function LoadResult({ answers, listQuestion }) {
 
 
 
-export default function GameVocaCn() {
+export default function GameVocaEng() {
     const language = ENGLISH; // eng or cn
     const URLGetQuestion = SERVER+'/api/'+language+'/vocabulary/game/getquestion';
     const [listQuestion, setListQuestion] = useState(Array(0))
