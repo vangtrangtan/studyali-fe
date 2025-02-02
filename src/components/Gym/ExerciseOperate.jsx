@@ -265,10 +265,10 @@ export default function Create() {
     const navigate = useNavigate();
     // console.log(typeof(correctId));
     const createHandle = (e) => {
-        if(statement.length===0 || name.length===0){
+        if (statement.length === 0 || name.length === 0) {
             setError("name, statement không được để trống");
         }
-        if (correctId === 0 || correctId > optionValues.length) {
+        else if (correctId === 0 || correctId > optionValues.length) {
             setError("hãy tick chọn option đúng");
         }
         else if (targetType === "user" && (targetUser === null || targetUser.trim() === "")) {
@@ -343,21 +343,20 @@ export function Edit() {
     const [statement, setStatement] = useState(question === null ? null : question.statement);
     const [timeLimit, setTimeLimit] = useState(question === null ? null : question.timeLimit);
     const [optionValues, setOptionValues] = useState(question === null ? null : question.options);
-    const [explain, setExplain] = useState(question === null ? "" : question.explain);
+    const [explain, setExplain] = useState(question === null || question.explain == null ? "" : question.explain);
     const [numOption, setNumOption] = useState(question === null ? null : question.options.length);
     const [correctId, setCorrectId] = useState(question === null ? null : question.correctOptionId);
     const [targetUser, setTargetUser] = useState(question === null ? null : question.targetUser);
     const [targetType, setTargetType] = useState(question === null ? null : question.targetType);
     const [error, setError] = useState(" ");
     const authHeader = useAuthHeader();
-
     if (question == null) {    //fix here when sb type /exercise/edit on url bar
         //add id to url
         // check if data not in state then send request from server 
-        return <Home/>;
+        return <Home />;
     }
     const editHandle = (e) => {
-        if(statement.length===0 || name.length===0){
+        if (statement.length === 0 || name.length === 0) {
             setError("name, statement không được để trống");
         }
         else if (correctId === 0 || correctId > optionValues.length) {

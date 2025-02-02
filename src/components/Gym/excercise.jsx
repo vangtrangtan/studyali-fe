@@ -37,6 +37,24 @@ function ShowResult({ question, userAnswer }) {
         </div>);
 }
 
+function sendResult(auth, question_id, result) {
+    const handleResquest = async () => {
+        try {
+            console.log("sened"+SERVER);
+            const response = await axios.post(SERVER + `/api/exercise/saveresult/${question_id}`, {
+                result
+            },
+                {
+                    headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': auth }
+                }
+            );
+        } catch (error) {
+            console.error('sendResult failed:', error.response ? error.response.data : error.message);
+        }
+    };
+    handleResquest();
+}
+
 function HandleQuestion({ auth, uid, gameId, setAnswer, question, sendResToServer }) {
 
     /*
@@ -78,7 +96,7 @@ function HandleQuestion({ auth, uid, gameId, setAnswer, question, sendResToServe
             if (optionId === question.correctOptionId) res = "correct";
             else res = "wrong";
         }
-        // if(sendResToServer===true)sendResult(auth, uid, gameId, question.questionId, res);
+        if(sendResToServer===true)sendResult(auth, question.id, res);
     }
 
     useEffect(() => {
@@ -115,6 +133,7 @@ function HandleQuestion({ auth, uid, gameId, setAnswer, question, sendResToServe
 export function Exercise({ question, sendResToServer }) {
     const [answer, setAnswer] = useState(null);
     const [start, setStart] = useState(question.timeLimit > 0 ? false : true);
+    const authHeader = useAuthHeader();
 
     function Body() {
         if (start === false) {
@@ -124,7 +143,7 @@ export function Exercise({ question, sendResToServer }) {
         }
         else {
             if (answer == null) {
-                return <HandleQuestion question={question} sendResToServer={sendResToServer} setAnswer={setAnswer} />;
+                return <HandleQuestion question={question} sendResToServer={sendResToServer} setAnswer={setAnswer} auth={authHeader}/>;
             }
             else {
                 return <ShowResult question={question} userAnswer={answer} />;
@@ -221,5 +240,5 @@ export default function LoadExercise() {
 
 
 
-    return <Exercise question={exercise} sendResToServer={false} />
+    return <Exercise question={exercise} sendResToServer={true} />
 }

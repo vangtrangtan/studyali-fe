@@ -2,6 +2,7 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { CaretDownFill, CaretRightFill } from 'react-bootstrap-icons';
 import { useNavigate, useSearchParams } from "react-router-dom";
 import '../../App.css';
 import "../../css/exercise.css";
@@ -34,25 +35,45 @@ function ShowResult({ question }) {
             <div style={{ height: "20px" }}></div>
             <div className="statement">{question.statement}</div>
             <div><ShowOptionchoice /></div>
-            {(question.explain!=null && question.explain.length>0)&&<div className="statement" style={{fontSize: "medium"}}>Explain: {question.explain}</div>}
+            {(question.explain != null && question.explain.length > 0) && <div className="statement" style={{ fontSize: "medium" }}>Explain: {question.explain}</div>}
         </div>);
 }
 
+const sendGetUserResult = async (exId, setUserResult, authHeader) => {
+    const URLGetResult = SERVER + `/api/exercise/getuserresult`;
+    const res = await axios.get(URLGetResult, {
+        params: {
+            id: exId
+        },
+        headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': authHeader }
+        , timeout: 5000
+    })
+        .then(function (response) {
+            console.log(response.data);
+            setUserResult(response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+            alert("Error get result !!! please contact ADMIN");
+        });
+}
 
 export function Exercise({ question }) {
     const navigate = useNavigate();
     const authHeader = useAuthHeader();
+    const [openResultTab, setOpenResultTab] = useState(false);
+    const [userResult, setUserResult] = useState(null);
     function Body() {
 
         return <ShowResult question={question} />;
     }
 
     function handleEdit() {
-        navigate('/exercise/edit',{state:question});
+        navigate('/exercise/edit', { state: question });
     }
 
-    function handleDelete(){
-        sendDeleteExercise({id:question.id, auth: authHeader});
+    function handleDelete() {
+        sendDeleteExercise({ id: question.id, auth: authHeader });
         navigate('/gym/own');
     }
     function Header() {
@@ -62,19 +83,45 @@ export function Exercise({ question }) {
             <p className="text mb-0">Author: {question.authorName}</p>
         </div>
     }
-  
+    function handleOpenResult(e) {
+        if (openResultTab == false && userResult == null) {
+            sendGetUserResult(question.id, setUserResult, authHeader);
+        }
+        setOpenResultTab(!openResultTab);
+    }
+
+    function UserResult() {
+        if (openResultTab) {
+            return <div className="mb-5" style={{ marginLeft: "3%" }}>
+                <button className="text mb-3" style={{ backgroundColor: "transparent", border: "none" }} onClick={handleOpenResult}>Result <CaretDownFill /></button>
+                <div className="mb-0" style={{ display: "flex" }}>
+                    <p className="text" style={{ color: "green" }}> {"Correct: "} </p>
+                    <p style={{ color: "black" }}>{userResult == null ? "" : userResult.correctUserList}</p>
+                </div>
+                <div className="" style={{ display: "flex" }}>
+                    <p className="text" style={{ color: "red" }}> {"Wrong: "}  </p>
+                    <p style={{ color: "black" }}>{userResult == null ? "" : userResult.wrongUserList}</p>
+                </div>
+            </div>
+        }
+        else {
+            return <button className="text mb-5" style={{ backgroundColor: "transparent", border: "none", marginLeft: "3%" }} onClick={handleOpenResult}>Result <CaretRightFill /></button>
+        }
+    }
+
     return <div className='exercise'>
         <Header />
         <div style={{ marginTop: "50px" }}>
             <Body />
+            <UserResult />
         </div>
 
         <div style={{ alignItems: "center", justifyContent: "center", display: "flex" }} >
-            <button type="button" className="btn btn-secondary btn-rounded col-2" data-mdb-ripple-init onClick={handleEdit}>Edit</button>            
-             <ConfirmationDialog response={handleDelete} >
-              {(showDialog) => (
-                <button type="button" className="btn btn-danger btn-rounded col-2 ms-3" data-mdb-ripple-init onClick={showDialog}>Delete</button>
-              )}
+            <button type="button" className="btn btn-secondary btn-rounded col-2" data-mdb-ripple-init onClick={handleEdit}>Edit</button>
+            <ConfirmationDialog response={handleDelete} >
+                {(showDialog) => (
+                    <button type="button" className="btn btn-danger btn-rounded col-2 ms-3" data-mdb-ripple-init onClick={showDialog}>Delete</button>
+                )}
             </ConfirmationDialog>
         </div>
     </div>
@@ -82,10 +129,10 @@ export function Exercise({ question }) {
 
 
 function sendDeleteExercise(props) {
-    
+
     const handleResquest = async () => {
         try {
-            const response = await axios.delete(SERVER + '/api/exercise/delete/'+props.id,
+            const response = await axios.delete(SERVER + '/api/exercise/delete/' + props.id,
                 {
                     headers: { "Accept": "application/json, text/plain", "Content-Type": "application/json", 'Authorization': props.auth }
                 }
@@ -140,7 +187,7 @@ export default function LoadOwnExercise() {
         name: "wtf ",
         authorName: "me",
         language: ENGLISH,
-        id:12,
+        id: 12,
         options: [
             {
                 id: 1,
@@ -164,7 +211,7 @@ export default function LoadOwnExercise() {
     if (exercise === null) {
         if ((/[0-9\b]+$/.test(exId))) {
             sendGetOwnExercise(exId, setExercise, authHeader, nav);
-        // setExercise(ques);
+            // setExercise(ques);
         }
         else {
             return <div className='loading'>Error !!! </div>;

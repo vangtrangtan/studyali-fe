@@ -1,30 +1,18 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useSignIn from 'react-auth-kit/hooks/useSignIn';
-import useSignOut from 'react-auth-kit/hooks/useSignOut';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
+    MDBCol,
     MDBContainer,
     MDBInput,
-    MDBBtn,
-    MDBDropdown,
-    MDBDropdownToggle,
-    MDBDropdownItem,
-    MDBDropdownMenu,
-    MDBCol,
-    MDBRow,
-    MDBCard,
-    MDBCardBody,
+    MDBRow
 } from 'mdb-react-ui-kit';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { CHINESE, ENGLISH, SERVER } from '../fileWithConstants';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { CHINESE, ENGLISH, SERVER } from '../fileWithConstants';
 // import '../../App.css';
-import '../../css/profile.css'
+import '../../css/profile.css';
 import ConfirmationDialog from '../Confirm/ConfirmationDialog';
 
 

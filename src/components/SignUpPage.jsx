@@ -71,8 +71,8 @@ function SignupPage() {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-50">
-            <div className="border rounded-lg p-4" style={{width: '600px', height: 'auto'}}>
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="border rounded-lg p-4" style={{width: '600px', height: 'auto', marginTop:"-30%"}}>
                 <MDBContainer className="p-3">
                     <h2 className="mb-4 text-center">Sign Up Page</h2>
                     {/* Render error message if exists */}
