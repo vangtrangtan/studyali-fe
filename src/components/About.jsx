@@ -13,8 +13,9 @@ const About = () => {
         <>
         <h3>Hi, I'm Thi Dai Loc (a.k.a vangtrangtan) and welcome to my website</h3>
         <p>This is my personal website for study purpose.</p>
-        <p>Currently, I am studying Chinese and I want to build this website for supporting foreign language learner community for free.</p>
-        <p>Here you can practise both English and Chinese by playing with exercises.</p>
+        <p>Currently, I've been studying Chinese and I want to build this website for providing exercise to foreign language learner community for free.</p>
+        <p>Here you can practise both English and Chinese by playing quiz game.</p>
+        <p>If you have any issue during using Studyali, or want to join Studyali team, please contact me: thidailoc6c@gmail.com </p>
         </>
     );
     if(detectMobile()){

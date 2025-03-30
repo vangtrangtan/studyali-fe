@@ -27,6 +27,7 @@ import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import { pie } from 'd3';
 import { detectMobile } from '../utils';
 import SettingPage from './SettingPage';
+import { awardItems } from '../../awards';
 
 function sendProfileRequest(username, setProfileData) {
   const handleResquest = async () => {
@@ -86,6 +87,13 @@ export function StatsPage({profileData}) {
     correctRate = (lang==ENGLISH?profileData.engStats.correctRate:profileData.cnStats.correctRate)+"%";
   }
 
+  let award =[];
+  awardItems.forEach(item => { 
+    if(item.username===username){
+      award = [...award,(<p className="mb-1" style={{color:"#CCCC00"}}>{item.award}</p>)];
+    }
+  });
+  
   return (
     <MDBRow>
   <MDBCol lg="4" >
@@ -102,6 +110,7 @@ export function StatsPage({profileData}) {
       <p className="text-muted mb-1">Total score: {totalScore}</p>
       <p className="text-muted mb-4">Rank: {rank}</p>
       <p className="text-muted mb-5">{slogan}</p>
+      <>{award}</>
       <div className="d-flex justify-content-center mb-2">
       </div>
     </MDBCardBody>

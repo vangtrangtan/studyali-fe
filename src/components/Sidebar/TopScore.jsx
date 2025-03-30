@@ -33,7 +33,7 @@ const Scoreboard = () => {
         rows = [...rows, (
             <tr key={i}>
                 <td width="10%">{data.length >= i ? data[i - 1].rank : ""}</td>
-                <td width="70%" style={{fontWeight:"bold", color:"gray"}}>{data.length >= i ? data[i - 1].username : ""}</td>
+                <td width="70%" style={{fontWeight:"bold", color:(i==1?"blue":(i<=3?"green":"gray"))}}>{data.length >= i ? data[i - 1].username : ""}</td>
                 <td width="20%">{data.length >= i ? data[i - 1].score : ""}</td>
             </tr>
         )]

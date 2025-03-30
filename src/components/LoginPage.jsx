@@ -57,7 +57,11 @@ function LoginPage({language, setLanguage}) {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center vh-100" onKeyDown={event => {
+            if (event.key === 'Enter') {
+                handleLogin()
+            }
+          }}>
             <div className="border rounded-lg p-4" style={{ width: '500px', height: 'auto', marginTop:"-30%"}}>
                 <MDBContainer className="p-3">
                     <h2 className="mb-4 text-center">Đăng nhập / Log in</h2>
